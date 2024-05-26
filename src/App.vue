@@ -32,13 +32,13 @@
         </div>
       </div>
       <div class="pt-4 w-1/2">
-        <form class="flex">
-          <input type="text" class="py-3 pl-1 " placeholder="Add a task ...">
-          <select class="py-3 px-3 bg-white">
+        <form class="flex justify-between">
+          <input type="text" class="py-3 w-[60%] pl-3 rounded-full focus:outline-none focus:ring focus:border-blue-500" placeholder="Add a task ...">
+          <select class="bg-white rounded-full px-2 w-[20%]">
             <option>Low</option>
             <option>High</option>
           </select>
-          <input type="submit" value="Add">
+          <input type="submit" value="Add" class="px-6 bg-sky-500 text-white rounded-full w-[15%]">
         </form>
       </div>
     </div>
