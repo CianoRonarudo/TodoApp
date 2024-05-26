@@ -3,7 +3,7 @@
     <h1 class="text-3xl  text-white text-center font-bold">
       My TodoApp
     </h1>
-    <div class="flex justify-center">
+    <div class="flex justify-center items-center flex-col">
       <div class="w-1/2 p-5 bg-slate-600">
         <div class="flex items-center justify-between w-full">
           <input
@@ -31,7 +31,18 @@
           </table>
         </div>
       </div>
+      <div class="pt-4 w-1/2">
+        <form class="flex">
+          <input type="text" class="py-3 pl-1 " placeholder="Add a task ...">
+          <select class="py-3 px-3 bg-white">
+            <option>Low</option>
+            <option>High</option>
+          </select>
+          <input type="submit" value="Add">
+        </form>
+      </div>
     </div>
+    
   </div>
 </template>
 

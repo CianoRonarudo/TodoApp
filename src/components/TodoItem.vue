@@ -29,7 +29,7 @@
             </svg>
         </td>
     </tr>
-    <div>rhthjykuk</div>
+    
 </template>
 <script setup>
 const props = defineProps(['todo'])
