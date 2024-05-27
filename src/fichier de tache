@@ -1,2 +1,5 @@
 Date : 26/05/2024 02:04
 - Finir le design des input pour le formulaire d'ajout pour une Todo
+Date : 27/05/2024
+- Mise en place de bouton de filtre (frontend)
+- Mise en place de l'ajout des todos (Fonction et components)
