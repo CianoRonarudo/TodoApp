@@ -2,9 +2,9 @@
   <!-- Div de la page -->
   <div class="lg:pt-20 h-full w-full bg-slate-800">
     <!-- Titre de la page -->
-    <!-- <h1 class="text-3xl  text-white text-center font-bold">
+    <h1 class="text-3xl  text-white text-center font-bold">
       My TodoApp
-    </h1> -->
+    </h1>
     <!-- Div de la liste -->
 
     <div class="flex justify-center items-center flex-col">
