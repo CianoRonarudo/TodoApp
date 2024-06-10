@@ -39,14 +39,7 @@
       <!-- Nouvelle interface pour l'app -->
       <div class="pt-4 w-1/2">
         <!-- Formulaire d'ajout d'une Todo -->
-        <form class="flex justify-between pb-10">
-          <input type="text" class="py-3 w-[60%] pl-5 rounded-full focus:outline-none focus:ring focus:border-blue-500" placeholder="Add a task ...">
-          <select class="bg-white rounded-full px-2 w-[20%]">
-            <option v-for="priority in priorities">{{ priority }}</option>
-            
-          </select>
-          <input type="submit" value="Add" class="px-6 bg-sky-500 text-white rounded-full w-[15%]">
-        </form>
+        <TodoForm :priorities="priorities" @add-todo="addTodo"></TodoForm>
         <!-- Liste des Todo -->
         <div class="w-[100%]">
           <div class="bg-white w-[100%] pb-10 pt-2 px-3 rounded-md">
@@ -62,6 +55,8 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import TodoItem from './components/TodoItem.vue';
+import TodoForm from './components/TodoForm.vue';
+
 const priorities = reactive([
   'High',
   'Low'
@@ -76,29 +71,38 @@ const todos = ref(
 )
 const myTodo = ref('')
 const isEdit = ref(null)
-const addTodo = () => {
-  if (isEdit.value === null) {
-    if (myTodo.value.length > 0) {
-      let newTodo = {
-        id: todos.value.length + 1,
-        text: myTodo.value,
-        status: 'Active',
-        priority: 'Low',
-        completed: false
+// const addTodo = () => {
+//   if (isEdit.value === null) {
+//     if (myTodo.value.length > 0) {
+//       let newTodo = {
+//         id: todos.value.length + 1,
+//         text: myTodo.value,
+//         status: 'Active',
+//         priority: 'Low',
+//         completed: false
 
-      }
-      todos.value.push(newTodo)
-    }
-  } else {
-    todos.value[isEdit.value].text = myTodo.value
-    isEdit.value = null
+//       }
+//       todos.value.push(newTodo)
+//     }
+//   } else {
+//     todos.value[isEdit.value].text = myTodo.value
+//     isEdit.value = null
+//   }
+
+
+//   console.log("no task")
+//   myTodo.value = ''
+
+
+// }
+const addTodo = (newTodo) => {
+  let readyAddTodo = {
+    id: todos.value.length,
+    text: newTodo.text,
+    status: 'Active',
+    priority: newTodo.priority
   }
-
-  
-  console.log("no task")
-  myTodo.value = ''
-
-
+  todos.value.push(readyAddTodo)
 }
 const deleteTodo = (index) => todos.value.splice(index - 1, 1)
 const editTodo = (index) => {
