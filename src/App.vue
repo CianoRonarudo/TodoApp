@@ -43,7 +43,7 @@
         <!-- Liste des Todo -->
         <div class="w-[100%]">
           <div class="bg-white w-[100%] pb-10 pt-2 px-3 rounded-md">
-            <TodoItem v-for="todo in todos" v-bind:key="todo.id" :todo="todo" @todo-change-status="todoChangeStatus(todo)"></TodoItem>
+            <TodoItem v-for="todo in todos" v-bind:key="todo.id" :todo="todo" @todo-change-status="todoChangeStatus(todo)" @delete-todo='deleteTodo(todo)'></TodoItem>
           </div>
         </div>
       </div>
@@ -112,25 +112,16 @@ const addTodo = (newTodo) => {
 
 
 
-const deleteTodo = (index) => todos.value.splice(index - 1, 1)
+const deleteTodo = (clickedTodo) => todos.value = todos.value.filter(todo => todo.id !== clickedTodo.id)
 const editTodo = (index) => {
   myTodo.value = todos.value[index - 1].text
   isEdit.value = index-1
   console.log(todos.value[index-1].text)
 }
 
-const todoChangeStatus = (todo) => {
-  console.log(todo)
-  todo.status = todo.completed ? 'Completed' : 'Active'
-}
-const todoChangePriority = (index) => {
-  if (todos.value[index - 1].priority ==="Low") {
-    todos.value[index - 1].priority = "High"
-  }
-  else {
-    todos.value[index - 1].priority = "Low"
-  }
-}
+const todoChangeStatus = (todo) => todo.status = todo.completed ? 'Completed' : 'Active'
+
+
 </script>
 
 <style scoped>
