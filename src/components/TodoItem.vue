@@ -1,5 +1,5 @@
 <template>
-    <div class="border-b grid grid-cols-12 py-2">
+    <div class="border-b grid grid-cols-12 py-2" :class="{'line-through': todo.completed}">
         
         <div class="col-span-1 flex justify-center items-center">
             <input type="checkbox" @change="todoChangeStatus" v-model="todo.completed">

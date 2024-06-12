@@ -121,7 +121,7 @@ const editTodo = (index) => {
 
 const todoChangeStatus = (todo) => {
   console.log(todo)
-  todo.status = 'Active'
+  todo.status = todo.completed ? 'Completed' : 'Active'
 }
 const todoChangePriority = (index) => {
   if (todos.value[index - 1].priority ==="Low") {
