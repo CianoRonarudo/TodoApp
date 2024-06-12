@@ -43,7 +43,7 @@
         <!-- Liste des Todo -->
         <div class="w-[100%]">
           <div class="bg-white w-[100%] pb-10 pt-2 px-3 rounded-md">
-            <TodoItem v-for="todo in todos" v-bind:key="todo.id" :todo="todo"></TodoItem>
+            <TodoItem v-for="todo in todos" v-bind:key="todo.id" :todo="todo" @todo-change-status="todoChangeStatus(todo)"></TodoItem>
           </div>
         </div>
       </div>
@@ -95,15 +95,23 @@ const isEdit = ref(null)
 
 
 // }
+
+
+
+// Nouvelles fonctions pour les fonctionnalités du TodoApp
 const addTodo = (newTodo) => {
   let readyAddTodo = {
     id: todos.value.length,
     text: newTodo.text,
     status: 'Active',
-    priority: newTodo.priority
+    priority: newTodo.priority,
+    completed : false
   }
   todos.value.push(readyAddTodo)
 }
+
+
+
 const deleteTodo = (index) => todos.value.splice(index - 1, 1)
 const editTodo = (index) => {
   myTodo.value = todos.value[index - 1].text
@@ -111,9 +119,9 @@ const editTodo = (index) => {
   console.log(todos.value[index-1].text)
 }
 
-const todoChangeStatus = (index) => {
-  todos.value[index - 1].completed = !todos.value[index - 1].completed
-  todos.value[index - 1].status = todos.value[index - 1].completed ? "Completed" : "Active"
+const todoChangeStatus = (todo) => {
+  console.log(todo)
+  todo.status = 'Active'
 }
 const todoChangePriority = (index) => {
   if (todos.value[index - 1].priority ==="Low") {

@@ -2,7 +2,7 @@
     <div class="border-b grid grid-cols-12 py-2">
         
         <div class="col-span-1 flex justify-center items-center">
-            <input type="checkbox">
+            <input type="checkbox" @change="todoChangeStatus" v-model="todo.completed">
         </div>
         <div class="px-4 col-span-5 flex items-center">
             {{ todo.text }}
@@ -50,7 +50,7 @@ function editTodo() {
     emit('edit-todo')
 }
 function todoChangeStatus() {
-    emit('todo-change-status', props.todo.id)
+    emit('todo-change-status', props.todo )
 }
 function todoChangePriority() {
     emit('todo-change-priority', props.todo.id)
