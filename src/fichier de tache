@@ -3,3 +3,6 @@ Date : 26/05/2024 02:04
 Date : 27/05/2024
 - Mise en place de bouton de filtre (frontend)
 - Mise en place de l'ajout des todos (Fonction et components)
+Date : 12/06/2024
+- Mise en place de la fonctionalité de update des Todos (event et fonctions)
+- Mise en place de la suppression (fonction et event)
