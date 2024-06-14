@@ -56,8 +56,8 @@ function deleteTodo() {
     
 }
 function editTodo() {
-    emit('edit-todo')
-    console.log("Ready to be updated")
+    emit('edit-todo', props.todo)
+    
 }
 function todoChangeStatus() {
     emit('todo-change-status', props.todo )

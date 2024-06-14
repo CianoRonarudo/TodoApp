@@ -21,6 +21,7 @@ const props = defineProps({
     type: Object,
     required: true
   },
+  
 })
 const emit = defineEmits([
   'add-todo'
@@ -30,6 +31,7 @@ function addTodo() {
   newTodo.value.text = '',
   newTodo.value.priority = ''
 }
+
 
 </script>
 

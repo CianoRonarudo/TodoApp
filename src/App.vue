@@ -43,11 +43,14 @@
         <!-- Liste des Todo -->
         <div class="w-[100%]">
           <div class="bg-white w-[100%] pb-10 pt-2 px-3 rounded-md">
-            <TodoItem v-for="todo in todos" v-bind:key="todo.id" :todo="todo" @todo-change-status="todoChangeStatus(todo)" @delete-todo='deleteTodo(todo)'></TodoItem>
+            <TodoItem v-for="todo in todos" v-bind:key="todo.id" :todo="todo" @todo-change-status="todoChangeStatus(todo)" @delete-todo='deleteTodo(todo)' @edit-todo="editTodo(todo)"></TodoItem>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Modal pour l'upadate de Todo -->
+    <EditionModal :isOpen="isEdit" @handle-close="closeModal"/>
     
   </div>
 </template>
@@ -56,11 +59,14 @@
 import { reactive, ref } from 'vue';
 import TodoItem from './components/TodoItem.vue';
 import TodoForm from './components/TodoForm.vue';
+import EditionModal from './components/Modal.vue';
 
 const priorities = reactive([
   'High',
   'Low'
 ])
+
+const isEdit = ref(false)
 
 const todos = ref(
   [
@@ -69,8 +75,8 @@ const todos = ref(
     { id: 3, text: 'Play guitare', status: 'Active', priority: 'Low', completed: false }
   ]
 )
-const myTodo = ref('')
-const isEdit = ref(null)
+
+
 // const addTodo = () => {
 //   if (isEdit.value === null) {
 //     if (myTodo.value.length > 0) {
@@ -113,13 +119,19 @@ const addTodo = (newTodo) => {
 
 
 const deleteTodo = (clickedTodo) => todos.value = todos.value.filter(todo => todo.id !== clickedTodo.id)
-const editTodo = (index) => {
-  myTodo.value = todos.value[index - 1].text
-  isEdit.value = index-1
-  console.log(todos.value[index-1].text)
+
+
+const editTodo = (todo) => {
+  isEdit.value = !isEdit.value
+  console.log(isEdit.value)
+
 }
 
 const todoChangeStatus = (todo) => todo.status = todo.completed ? 'Completed' : 'Active'
+
+const closeModal = () => {
+  isEdit.value = false
+}
 
 
 </script>
