@@ -8,34 +8,6 @@
     <!-- Div de la liste -->
 
     <div class="flex justify-center items-center flex-col">
-      <!-- Ancienne interface -->
-      <!-- <div class="w-1/2 p-5 bg-slate-600">
-        <div class="flex items-center justify-between w-full">
-          <input
-            class="focus: border border-slate-300 w-2/3 placeholder:text-slate-400 placeholder:italic shadow-sm rounded-md outline-none"
-            placeholder="Enter your task ..." v-model="myTodo">
-          <button @click="addTodo" class="w-1/4 shadow-sm rounded-sm bg-sky-400 text-white">Submit</button>
-        </div>
-        <div class="overflow-auto rounded-lg shadow">
-          <table class="w-full">
-            <thead class="bg-gray-50 border-b-2 border-gray-200">
-              <tr>
-                <th class="p-3 text-sm font-semibold tracking-wide text-left"></th>
-                <th class="p-3 text-sm font-semibold tracking-wide text-left">Name</th>
-                <th class="p-3 text-sm font-semibold tracking-wide text-left">Status</th>
-                <th class="p-3 text-sm font-semibold tracking-wide text-left">Priority</th>
-                <th class="p-3 text-sm font-semibold tracking-wide text-left">#</th>
-                <th class="p-3 text-sm font-semibold tracking-wide text-left">#</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-
-              <TodoItem v-for="todo in todos" v-bind:key="todo.id" :todo="todo" @edit-todo="editTodo(todo.id)" @delete-todo="deleteTodo(todo.id)" @todo-change-status="todoChangeStatus(todo.id)" @todo-change-priority="todoChangePriority(todo.id)"></TodoItem>
-
-            </tbody>
-          </table>
-        </div>
-      </div> -->
       <!-- Nouvelle interface pour l'app -->
       <div class="pt-4 w-1/2">
         <!-- Formulaire d'ajout d'une Todo -->
@@ -50,7 +22,9 @@
     </div>
 
     <!-- Modal pour l'upadate de Todo -->
-    <EditionModal :isOpen="isEdit" @handle-close="closeModal"/>
+    <Modal :isOpen="isEdit" @handle-close="closeModal">
+      <EditForm @handle-edit-todo="handleEditTodo" :priorities="priorities" :statuses="statuses" :todo="clickTodo"/>
+    </Modal>
     
   </div>
 </template>
@@ -59,11 +33,16 @@
 import { reactive, ref } from 'vue';
 import TodoItem from './components/TodoItem.vue';
 import TodoForm from './components/TodoForm.vue';
-import EditionModal from './components/Modal.vue';
+import Modal from './components/Modal.vue';
+import EditForm from './components/EditForm.vue';
 
 const priorities = reactive([
   'High',
   'Low'
+])
+const statuses = reactive([
+  'Active',
+  'Completed'
 ])
 
 const isEdit = ref(false)
@@ -75,56 +54,37 @@ const todos = ref(
     { id: 3, text: 'Play guitare', status: 'Active', priority: 'Low', completed: false }
   ]
 )
-
-
-// const addTodo = () => {
-//   if (isEdit.value === null) {
-//     if (myTodo.value.length > 0) {
-//       let newTodo = {
-//         id: todos.value.length + 1,
-//         text: myTodo.value,
-//         status: 'Active',
-//         priority: 'Low',
-//         completed: false
-
-//       }
-//       todos.value.push(newTodo)
-//     }
-//   } else {
-//     todos.value[isEdit.value].text = myTodo.value
-//     isEdit.value = null
-//   }
-
-
-//   console.log("no task")
-//   myTodo.value = ''
-
-
-// }
-
-
+let clickTodo = {}
 
 // Nouvelles fonctions pour les fonctionnalités du TodoApp
 const addTodo = (newTodo) => {
   let readyAddTodo = {
-    id: todos.value.length,
+    id: todos.value.length + 1,
     text: newTodo.text,
     status: 'Active',
     priority: newTodo.priority,
     completed : false
   }
   todos.value.push(readyAddTodo)
+  console.log(todos.value)
 }
 
 
 
 const deleteTodo = (clickedTodo) => todos.value = todos.value.filter(todo => todo.id !== clickedTodo.id)
-
+function findTodoIndexById(id) {
+  return todos.value.findIndex(todo => todo.id === id)
+}
 
 const editTodo = (todo) => {
   isEdit.value = !isEdit.value
-  console.log(isEdit.value)
-
+  clickTodo = { ...todo }
+}
+const handleEditTodo = (newTodo) => {
+  // todos.value[newTodo.id - 1] = newTodo
+  let todoIndex = findTodoIndexById(newTodo.id)
+  todos.value[todoIndex] = newTodo
+  isEdit.value = false
 }
 
 const todoChangeStatus = (todo) => todo.status = todo.completed ? 'Completed' : 'Active'

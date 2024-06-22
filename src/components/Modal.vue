@@ -1,19 +1,27 @@
 <template>
     
   <Teleport to="body">
-    <div v-if="isOpen" class="modal fixed z-[999] top-0 left-1/2 bg-white px-10 py-4">
-      <p>Hello from the modal!</p>
-      <span @click="handleClose">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-        </svg>
-      </span>
+    <div v-if="isOpen" class="modal shadow-2xl fixed z-[999] top-10 left-1/3 bg-white px-10 py-4 w-[35%] h-96">
+      <div class="flex justify-between">
+        <p>Titre</p>
+        <span class="hover:text-sky-700" @click="handleClose">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </span>
+      </div>
+      <slot>
+        
+      </slot>
       <!-- <button @click="open = false">Close</button> -->
     </div>
   </Teleport>
 </template>
 
 <script setup>
+/*  Liste des props:
+  * isOpen: Bool qui sert à l'ouverture et la fermeture de la modale
+*/
   const props = defineProps([
     'isOpen',
   ])
