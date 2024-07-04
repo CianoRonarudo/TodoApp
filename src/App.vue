@@ -17,6 +17,9 @@
           <div class="bg-white w-[100%] pb-10 pt-2 px-3 rounded-md">
             <TodoItem v-for="todo in todos" v-bind:key="todo.id" :todo="todo" @todo-change-status="todoChangeStatus(todo)" @delete-todo='deleteTodo(todo)' @edit-todo="editTodo(todo)"></TodoItem>
           </div>
+          <div class="pt-4">
+            <FilterTodo :statuses="statuses" :priorities="priorities" />
+          </div>
         </div>
       </div>
     </div>
@@ -35,6 +38,7 @@ import TodoItem from './components/TodoItem.vue';
 import TodoForm from './components/TodoForm.vue';
 import Modal from './components/Modal.vue';
 import EditForm from './components/EditForm.vue';
+import FilterTodo from './components/FilterTodo.vue';
 
 const priorities = reactive([
   'High',
@@ -46,6 +50,7 @@ const statuses = reactive([
 ])
 
 const isEdit = ref(false)
+
 
 const todos = ref(
   [
