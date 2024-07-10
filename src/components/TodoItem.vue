@@ -7,12 +7,13 @@
             {{ todo.name }}
           </div>
           <div class="col-span-2 flex justify-center items-center">
-            <span class="px-2 py-1 rounded-lg text-white text-xs font-bold uppercase" :class="{'bg-rose-500': todo.priority === 'High', 'bg-sky-500' : todo.priority === 'Low' }">
+            <span class="px-2 py-1 rounded-lg text-white text-xs font-bold uppercase" :class="{'bg-rose-500': todo.priority === 'High', 'bg-indigo-500' : todo.priority === 'Low' }">
                 {{ todo.priority }}
             </span>
 
           </div>
-          <span class="col-span-1 flex justify-center items-center">
+          <!-- Icone pour le update -->
+          <span class="col-span-1 flex justify-center items-center" @click="handleClikOnEditButton">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 hover:text-sky-600">
                 <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
             </svg>
@@ -32,7 +33,13 @@
 const props = defineProps([
     'todo'
 ])
+const emit = defineEmits([
+  'handle-click-on-edit-button',
+])
 
+function handleClikOnEditButton() {
+  emit('handle-click-on-edit-button', props.todo)
+}
 
 </script>
 

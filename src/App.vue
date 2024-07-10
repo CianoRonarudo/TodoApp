@@ -22,11 +22,17 @@
         </button>
       </div>
       <div class="bg-white mt-5 w-[100%] pb-10 pt-2 px-3 rounded-xl text-slate-600">
-        <TodoItem v-if="shownTodos.length > 0" v-for="todo in shownTodos" :todo="todo" v-bind:key="todo.id"></TodoItem>
+        <TodoItem v-if="shownTodos.length > 0" v-for="todo in shownTodos" 
+          :todo="todo" v-bind:key="todo.id"
+          @handle-click-on-edit-button="handleClikOnEditButton(todo)"
+        >
+        </TodoItem>
         <div v-else class="flex justify-center items-center text-slate-400">
           Aucun todo disponible
         </div>
-        <div class="pt-2 flex justify-end pb-1">
+
+        <!-- Boutton d'ajout de Todo -->
+        <div class="pt-2 flex justify-end pb-1 cursor-pointer" @click="handleClickOnAddTodoButton">
           <span class="bg-indigo-600 shadow-lg rounded-full font-bold text-xl text-white">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -50,12 +56,25 @@
       </div>
     </div>
   </div>
+
+  <ModaleWindow 
+    :is-open="isOpenModale" 
+    :is-request="isRequestForModal" 
+    :modal-content="whatForModal" 
+    @close-modal="handleCloseModal"
+  >
+    <TodoForm v-if="isAddForm && isRequestForModal && whatForModal === 'form'" :is-add-form="isAddForm">
+
+    </TodoForm>
+    <TodoForm v-else-if="!isAddForm && isRequestForModal && whatForModal === 'form'" />
+  </ModaleWindow>
 </template>
 
 <script setup>
 import TodoItem from '@/components/TodoItem.vue'
 import { computed, ref } from 'vue';
-
+import ModaleWindow from '@/components/ModaleWindow.vue'
+import TodoForm from './components/TodoForm.vue';
 //constitution d'une base de données 
 const todos = [
   {
@@ -92,11 +111,42 @@ const filterFunction = (tag) => {
   visibility.value = tag
 }
 
+// Gestion pour la fenêtre modale et gestion de son contenu (variables)
+const isOpenModale = ref(false)
+
+const isRequestForModal = ref(false)
+const isAddForm = ref(false)
+
+const whatForModal = ref('')
 
 // Variable et fonction pour le truc de recherche
 const visibleSearchInput = ref(false)
 const showSearchInput = () =>
   visibleSearchInput.value = !visibleSearchInput.value
+
+
+// Gestion de la fenêtre modale
+const handleCloseModal = () => {
+  isOpenModale.value = false
+}
+// Gestion du contenu de la modale et event du button d'ajout
+const handleClickOnAddTodoButton = () => {
+  isOpenModale.value = true
+  isRequestForModal.value = true
+  isAddForm.value = true
+  whatForModal.value = 'form'
+  
+}
+
+// Gestion du contenu de la fenêtre modale et buttob d'edit du todo
+
+const handleClikOnEditButton = (todo) => {
+  isOpenModale.value = true
+  isRequestForModal.value = true
+  isAddForm.value = false
+  whatForModal.value = 'form'
+
+}
 
 </script>
 
