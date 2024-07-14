@@ -13,7 +13,7 @@
         <span class="pl-3">Rechercher une todo ...</span>
       </div>
       <div v-show="visibleSearchInput" class="w-full flex justify-between mt-2 pt-2">
-        <input type="text" class="w-[89%] py-3 rounded-full px-5" placeholder="Rechercher une todo ...">
+        <input v-model="search" @input="handleSearchTodo" type="text" class="w-[89%] py-3 rounded-full px-5" placeholder="Rechercher une todo ...">
         <button @click="showSearchInput" class="w-[10%] rounded-full flex items-center justify-center bg-indigo-600 text-white">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -21,10 +21,15 @@
 
         </button>
       </div>
+      <div>
+        <input required v-model="data" class="py-3 rounded-full mt-10 mb-10 pr-5 pl-7 w-full" type="text" :placeholder="isEditTodo ? 'Modifier le todo' : 'Ajouter le todo'" @keyup.enter="addTodo">
+      </div>
       <div class="bg-white mt-5 w-[100%] pb-10 pt-2 px-3 rounded-xl text-slate-600">
         <TodoItem v-if="shownTodos.length > 0" v-for="todo in shownTodos" 
           :todo="todo" v-bind:key="todo.id"
           @handle-click-on-edit-button="handleClikOnEditButton(todo)"
+          @handle-click-on-delete-button="handleClickOnDeleteButton(todo)"
+          @change-todo-priority="changeTodoPriority(todo)"
         >
         </TodoItem>
         <div v-else class="flex justify-center items-center text-slate-400">
@@ -32,12 +37,11 @@
         </div>
 
         <!-- Boutton d'ajout de Todo -->
-        <div class="pt-2 flex justify-end pb-1 cursor-pointer" @click="handleClickOnAddTodoButton">
-          <span class="bg-indigo-600 shadow-lg rounded-full font-bold text-xl text-white">
+        <div class="pt-2 flex justify-end pb-1">
+          <span class="bg-indigo-600 shadow-lg cursor-pointer rounded-full font-bold text-xl text-white" @click="handleClickOnAddTodoButton">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
-
           </span>
         </div>
         <div class="flex justify-center items-center">
@@ -56,27 +60,14 @@
       </div>
     </div>
   </div>
-
-  <ModaleWindow 
-    :is-open="isOpenModale" 
-    :is-request="isRequestForModal" 
-    :modal-content="whatForModal" 
-    @close-modal="handleCloseModal"
-  >
-    <TodoForm v-if="isAddForm && isRequestForModal && whatForModal === 'form'" :is-add-form="isAddForm">
-
-    </TodoForm>
-    <TodoForm v-else-if="!isAddForm && isRequestForModal && whatForModal === 'form'" />
-  </ModaleWindow>
 </template>
 
 <script setup>
 import TodoItem from '@/components/TodoItem.vue'
-import { computed, ref } from 'vue';
-import ModaleWindow from '@/components/ModaleWindow.vue'
-import TodoForm from './components/TodoForm.vue';
+import { computed, ref } from 'vue'
+const search = ref('')
 //constitution d'une base de données 
-const todos = [
+const todos = ref([
   {
     id: 1,
     name: 'Learn',
@@ -96,57 +87,93 @@ const todos = [
     priority : 'High'
   },
 
-]
+])
+
+const clickTodo = ref({})
+  
 
 const filteredTodos = {
   all: (todos) => todos,
   active: (todos) => todos.filter((todo) => !todo.completed),
   completed: (todos) => todos.filter((todo) => todo.completed),
+  search: (todos) => {
+    if (search.value === '') {
+      return todos
+    }
+    else {
+      const searchQuery = search.value.toLowerCase()
+      return todos.filter((todo) => todo.name.toLowerCase().includes(searchQuery))
+    }
+  } 
 }
 const visibility = ref('all')
 
-const shownTodos = computed(() => filteredTodos[visibility.value](todos))
+const shownTodos = computed(() => {
+  return filteredTodos[visibility.value](todos.value)
+})
 
 const filterFunction = (tag) => {
   visibility.value = tag
 }
-
-// Gestion pour la fenêtre modale et gestion de son contenu (variables)
-const isOpenModale = ref(false)
-
-const isRequestForModal = ref(false)
-const isAddForm = ref(false)
-
-const whatForModal = ref('')
 
 // Variable et fonction pour le truc de recherche
 const visibleSearchInput = ref(false)
 const showSearchInput = () =>
   visibleSearchInput.value = !visibleSearchInput.value
 
-
-// Gestion de la fenêtre modale
-const handleCloseModal = () => {
-  isOpenModale.value = false
+// edit Todo
+const isEditTodo = ref(false)
+// Ajout de todo
+const data = ref('')
+const addTodo = () => {
+  if (data.value !== '') {
+    if (!isEditTodo.value) {
+      const maxId = todos.value.reduce((max, todo) => Math.max(max, todo.id), 0)
+      console.log(maxId)
+      todos.value.push(
+        {
+          id: maxId + 1,
+          name: data.value,
+          completed: false,
+          priority: 'Low'
+        }
+      )
+    }
+    else {
+      todos.value[findTodoIndexById(clickTodo.value.id)].name = data.value
+      isEditTodo.value = false
+    }
+    data.value = ''
+  }
+} 
+const findTodoIndexById = (id) => {
+  return todos.value.findIndex(todo => todo.id === id)
 }
-// Gestion du contenu de la modale et event du button d'ajout
-const handleClickOnAddTodoButton = () => {
-  isOpenModale.value = true
-  isRequestForModal.value = true
-  isAddForm.value = true
-  whatForModal.value = 'form'
+
+const handleClikOnEditButton = (todo) => {
+  clickTodo.value = { ...todo }
+  // console.log(clickTodo.value)
+  // console.log(todos.value[findTodoIndexById(clickTodo.value.id)])
+  data.value = todos.value[findTodoIndexById(clickTodo.value.id)].name
+  isEditTodo.value = true
+  // console.log(todos.value)
+}
+
+const handleClickOnDeleteButton = (todo) => {
+  clickTodo.value = { ...todo}
+  todos.value = todos.value.filter((todo) => todo.id !== clickTodo.value.id)
   
 }
 
-// Gestion du contenu de la fenêtre modale et buttob d'edit du todo
-
-const handleClikOnEditButton = (todo) => {
-  isOpenModale.value = true
-  isRequestForModal.value = true
-  isAddForm.value = false
-  whatForModal.value = 'form'
+const handleSearchTodo = () => {
+  filterFunction('search')
+  console.log('Recherche ,', search.value)
 
 }
 
+const changeTodoPriority = (todo) => {
+  clickTodo.value = { ...todo}
+  todos.value[findTodoIndexById(clickTodo.value.id)].priority = todos.value[findTodoIndexById(clickTodo.value.id)].priority === 'Low' ? 'High' : 'Low'
+}
 </script>
 

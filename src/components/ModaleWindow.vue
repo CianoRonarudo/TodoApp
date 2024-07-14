@@ -14,7 +14,7 @@
                 <slot>
                     
                 </slot>
-                <div class="mt-10">
+                <!-- <div class="mt-10">
                     <div v-if="modalContent === 'form'" class="flex justify-end py-2 px-1">
                         <button class="font-semibold text-indigo-500 px-2 py-1 rounded-md active:bg-indigo-700 active:text-white">
                             Soumettre
@@ -31,7 +31,7 @@
                             Non
                         </button>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </Teleport>
@@ -48,7 +48,7 @@ const props = defineProps([
 console.log(props.modalContent, 'Modal content')
 
 const positionClass = computed(() => {
-    return props.isRequest ? "top-10 left-1/3 h-64" : "top-2 left-2 h-24"
+    return props.isRequest ? "top-10 left-1/3 h-64" : "top-2 left-2 h-36"
 })
 
 
